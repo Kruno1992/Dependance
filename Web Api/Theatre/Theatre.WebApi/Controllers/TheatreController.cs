@@ -78,10 +78,16 @@ namespace Theatre.WebApi.Controllers
 
         }
         [HttpPut]
-        public async Task<HttpResponseMessage> EditPersonnelAsync(Guid id, [FromBody] Personnel personnel)
+        public async Task<HttpResponseMessage> EditPersonnelAsync(Guid id, [FromBody] PersonnelRest personnel)
         {
-            bool edited = await PersonnelService.AddPersonnelAsync(personnel);
-            if (edited != false)
+            Personnel putPersonnel = new Personnel();
+            putPersonnel.PersonnelName = putPersonnel.PersonnelName;
+            putPersonnel.Surname=putPersonnel.Surname;
+            putPersonnel.Position = putPersonnel.Position;
+            putPersonnel.HoursOfWork = putPersonnel.HoursOfWork;
+
+            bool putSucces = await PersonnelService.EditPersonnelAsync(id, putPersonnel);
+            if (putSucces != false)
 
             {
                 return Request.CreateResponse(HttpStatusCode.OK, "Successfully updated");
