@@ -14,6 +14,7 @@ using Theatre.Service.Common;
 using Theatre.Service;
 using Theatre.Repository;
 using Theatre.Model;
+using Theatre.Common;
 
 namespace Theatre.WebApi.Controllers
 {
@@ -27,9 +28,9 @@ namespace Theatre.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> GetAllPersonnelAsync()
+        public async Task<HttpResponseMessage> GetAllPersonnelAsync(Paging paging, Sorting sorting, Filtering filtering)
         {
-            var worker = await PersonnelService.GetAllPersonnelAsync();
+            var worker = await PersonnelService.GetAllPersonnelAsync(paging, sorting, filtering);
             if (worker != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, worker);

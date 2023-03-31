@@ -92,6 +92,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Theatre.Common\Theatre.Common.csproj">
+      <Project>{FF040C20-3924-4883-8C26-A6245B2DF2CB}</Project>
+      <Name>Theatre.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Theatre.Model\Theatre.Model.csproj">
       <Project>{869AC5C8-03EF-4FE4-BDB3-D80CA775816D}</Project>
       <Name>Theatre.Model</Name>

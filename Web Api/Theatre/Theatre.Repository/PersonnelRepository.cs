@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
+using Theatre.Common;
 using Theatre.Model;
 using Theatre.Repository.Common;
 
@@ -14,7 +17,7 @@ namespace Theatre.Repository
     {
         public static string connectionString = "Data Source=DESKTOP-6E381JI;Initial Catalog=ProdajaKarataKazalište;Integrated Security=True";
 
-        public async Task<List<Personnel>> GetAllPersonnelAsync()
+        public async Task<List<Personnel>> GetAllPersonnelAsync(Paging paging, Sorting sorting, Filtering filtering)
         {
             try
             {
@@ -195,6 +198,79 @@ namespace Theatre.Repository
             catch (Exception)
             {
                 return false;
+            }
+        }
+        public async Task<List<Personnel>> PagingSortingFiltering(Paging paging,Sorting sorting,Filtering filtering) //PAGING SORTING FILTERING
+        {
+            try
+            {
+                SqlConnection connection = new SqlConnection(connectionString);
+                using (connection)
+                {
+                    StringBuilder queryString = new StringBuilder();
+                    queryString.AppendLine("SELECT*FROM Personnel WHERE 1=1 ");
+
+                    //filtering
+                    if (filtering != null)
+                    {
+                        if (filtering.Id != Guid.Empty)
+                        {
+                            queryString.AppendLine("AND Id = @Id ");
+                        }
+                    }
+                    
+                    //sorting
+                    if (sorting != null)
+                    {
+                        queryString.AppendLine($"ORDER BY {sorting.OrderBy} ");
+                    }
+
+                    //paging
+                    if (paging != null)
+                    {
+                        queryString.AppendLine(" OFFSET (@pageNumber -1) * @pageSize ROWS FETCH NEXT @pageSize ROWS ONLY;");
+                    }
+                    
+                    SqlCommand command = new SqlCommand(queryString.ToString(), connection);
+                    command.Parameters.AddWithValue("@Id", filtering.Id);
+                    command.Parameters.AddWithValue("@PageSize", paging.PageSize);
+                    command.Parameters.AddWithValue("@PageNumber", paging.PageNumber);
+
+
+                    command.Connection = connection;
+                    connection.Open();
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                    List<Personnel> personnel = new List<Personnel>();
+
+                    while (reader.Read())
+                    {
+                        Personnel pers = new Personnel();
+
+                        pers.Id = reader.GetGuid(0);
+                        pers.PersonnelName = reader.GetString(1);
+                        pers.Surname = reader.GetString(2);
+                        pers.Position = reader.GetString(3);
+                        pers.HoursOfWork = reader.GetInt32(4);
+
+                        personnel.Add(pers);
+                    }
+
+                    if (reader.HasRows)
+                    {
+                        reader.Close();
+                        return personnel;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
     }

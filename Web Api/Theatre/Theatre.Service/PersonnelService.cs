@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Theatre.Common;
 using Theatre.Model;
 using Theatre.Repository;
 using Theatre.Repository.Common;
@@ -20,9 +21,9 @@ namespace Theatre.Service
             PersonnelRepository = personnelRepository;
         }
 
-        public async Task<List<Personnel>> GetAllPersonnelAsync()
+        public async Task<List<Personnel>> GetAllPersonnelAsync(Paging paging, Sorting sorting, Filtering filtering)
         {
-            List<Personnel> worker = await PersonnelRepository. GetAllPersonnelAsync();
+            List<Personnel> worker = await PersonnelRepository. GetAllPersonnelAsync(paging, sorting, filtering);
             return worker;
         }
 
