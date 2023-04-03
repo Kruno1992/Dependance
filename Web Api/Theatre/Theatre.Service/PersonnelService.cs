@@ -27,9 +27,9 @@ namespace Theatre.Service
             return worker;
         }
 
-        public async Task<List<Personnel>>GetPersonnelAsync(Guid id)
+        public async Task<Personnel>GetPersonnelAsync(Guid id)
         {
-            List<Personnel> personnel = await PersonnelRepository. GetPersonnelAsync(id);
+            Personnel personnel = await PersonnelRepository. GetPersonnelAsync(id);
             return personnel;
         }
 

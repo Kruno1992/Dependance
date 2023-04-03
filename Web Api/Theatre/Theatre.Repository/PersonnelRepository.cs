@@ -60,7 +60,7 @@ namespace Theatre.Repository
                 return null;
             }
         }
-        public async Task<List<Personnel>> GetPersonnelAsync(Guid id)
+        public async Task<Personnel> GetPersonnelAsync(Guid id)
         {
             try
             {
@@ -73,8 +73,6 @@ namespace Theatre.Repository
 
                     SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
-                    List<Personnel> workers = new List<Personnel>();
-
                     if (reader.HasRows)
                     {
                         reader.Read();
@@ -86,10 +84,8 @@ namespace Theatre.Repository
                         personnel.Position = reader.GetString(3);
                         personnel.HoursOfWork = reader.GetInt32(4);
 
-                        workers.Add(personnel);
-
                         reader.Close();
-                        return workers;
+                        return personnel;
                     }
                     else
                     {
@@ -139,7 +135,7 @@ namespace Theatre.Repository
                 return false;
             }
         }
-        public async Task<bool> EditPersonnelAsync(Guid id, Personnel personnel)
+        public async Task<bool> EditPersonnelAsync(Guid id, Theatre.Model.Personnel personnel)
         {
             try
             {
